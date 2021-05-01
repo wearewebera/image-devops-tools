@@ -13,7 +13,7 @@ function install_ubuntu_packages()
   sudo apt update
   sudo apt dist-upgrade -y
   sudo apt autoremove -y
-  sudo apt install -y ${PACKAGES} 
+  sudo apt install -y ${PACKAGES[*]}
 }
 
 function install_gitlab_runner()
@@ -90,7 +90,21 @@ export PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/sbin:/usr/local/sbin:
 
 BIN_DIR=${HOME}/bin
 TMP_DIR=${HOME}/tmp/workstation-tmp
-PACKAGES="docker.io vim build-essential curl python3 python3-dev python3-pip"
+PACKAGES=(
+  apt-utils
+  docker.io
+  vim
+  build-essential
+  git
+  golang
+  curl
+  wget
+  python3
+  python3-dev
+  python3-pip
+  software-properties-common
+  unzip
+)
 
 mkdir -p ${BIN_DIR} ${TMP_DIR}
 cd ${TMP_DIR}
