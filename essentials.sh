@@ -8,12 +8,15 @@ function simple_install() # Receives binary name and url
 
 function install_ubuntu_packages()
 {
-  echo "- Requesting sudo privilege"
-  [ "$(sudo id -u)" = "0" ] || { echo "You need sudo privileges to continue"; exit 1; } 
-  sudo apt update
-  sudo apt dist-upgrade -y
-  sudo apt autoremove -y
-  sudo apt install -y ${PACKAGES[*]}
+  SUDO=''
+  if (( $EUID != 0 )); then
+    SUDO='sudo'
+    [ "$(sudo id -u)" = "0" ] || { echo "You need sudo privileges to continue"; exit 1; } 
+  fi
+  ${SUDO} apt update
+  ${SUDO} apt dist-upgrade -y
+  ${SUDO} apt autoremove -y
+  ${SUDO} apt install -y ${PACKAGES[*]}
 }
 
 function install_gitlab_runner()
