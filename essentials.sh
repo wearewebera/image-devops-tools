@@ -32,6 +32,12 @@ function install_helm()
   mv linux-amd64/helm ${BIN_DIR}
 }
 
+function install_kustomize()
+{
+  curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+  mv kustomize ${BIN_DIR}
+}
+
 function install_scaffold()
 {
   simple_install skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
@@ -113,6 +119,7 @@ mkdir -p ${BIN_DIR} ${TMP_DIR}
 cd ${TMP_DIR}
 
 install_ubuntu_packages
+install_kustomize
 install_gitlab_runner
 install_helm
 install_scaffold
