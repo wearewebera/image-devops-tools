@@ -77,7 +77,7 @@ function configure_helper()
   HELPER_LINE='source ${HOME}/.bash_helper.sh'
   cat > ${HOME}/.bash_helper.sh <<EOL
 PATH=\${HOME}/bin:\${PATH}
-complete -C \${HOME}/bin/kustomize kustomize
+source <(kustomize completion bash)
 source <(helm completion bash)
 source <(skaffold completion bash)
 source <(kubectl completion bash)
