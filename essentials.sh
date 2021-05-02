@@ -34,6 +34,7 @@ UBUNTU_PACKAGES=(
   python3-pip
   software-properties-common
   unzip
+  jq
 )
 
 mkdir -p ${BIN_DIR} ${TMP_DIR}
@@ -160,7 +161,7 @@ function install_aws()
   aws/install -i ${BIN_DIR}/aws-cli -b ${BIN_DIR}
 }
 
-echo -e "- Start tools, packages, and updates. Time for a ${BEER} or a ${TEACUP}"
+echo -e "- Installing tools, packages, and updates. Time for a ${BEER} or a ${TEACUP}"
 declare -A STEPS=(
   [install_ubuntu_packages]="Ubuntu Packages"
   [install_kustomize]="Kustomize"
