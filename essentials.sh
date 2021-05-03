@@ -55,7 +55,7 @@ function simple_install() {
   chmod +x ${BIN_DIR}/$1
 }
 
-function install_ubuntu_packages()
+function ubuntu_packages()
 {
   SUDO=''
   if (( $EUID != 0 )); then
@@ -163,7 +163,6 @@ function install_aws()
 
 echo -e "- Installing tools, packages, and updates. Time for a ${BEER} or a ${TEACUP}"
 declare -A STEPS=(
-  [install_ubuntu_packages]="Ubuntu Packages"
   [install_kustomize]="Kustomize"
   [install_gitlab_runner]="GitLab Runner"
   [install_helm]="Helm"
@@ -177,6 +176,9 @@ declare -A STEPS=(
   [install_gcloud]="Google Cloud CLI"
   [install_aws]="AWS CLI V2"
 )
+
+
+printf '  - %-30s' "Ubuntu Packages" && ubuntu_packages >${LOG_FILE} 2>&1 && ${OK} || ${NOK}
 
 for STEP in "${!STEPS[@]}"
 do
