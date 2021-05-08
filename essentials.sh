@@ -133,6 +133,7 @@ source <(kubectl completion bash)
 source <(kind completion bash)
 source <(tkn completion bash)
 source <(eksctl completion bash)
+source <(flux completion bash)
 umask 022
 EOL
   chmod +x ${HOME}/.bash_helper.sh
@@ -161,6 +162,12 @@ function install_aws()
   aws/install -i ${BIN_DIR}/aws-cli -b ${BIN_DIR}
 }
 
+function install_flux()
+{
+  curl -sLO https://fluxcd.io/install.sh 
+  bash install.sh ${BIN_DIR}
+}
+
 echo -e "- Installing tools, packages, and updates. Time for a ${BEER} or a ${TEACUP}"
 declare -A STEPS=(
   [install_kustomize]="Kustomize"
@@ -174,6 +181,7 @@ declare -A STEPS=(
   [configure_helper]="Shell Helper"
   [install_terraform]="Terraform"
   [install_gcloud]="Google Cloud CLI"
+  [install_flux]="Flux CLI"
   [install_aws]="AWS CLI V2"
 )
 
