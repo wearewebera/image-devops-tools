@@ -135,6 +135,7 @@ source <(tkn completion bash)
 source <(eksctl completion bash)
 source <(flux completion bash)
 umask 022
+export EDITOR=vim
 EOL
   chmod +x ${HOME}/.bash_helper.sh
   grep -qxF "${HELPER_LINE}" ${HOME}/.bashrc || echo ${HELPER_LINE} >> ${HOME}/.bashrc
