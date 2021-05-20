@@ -66,6 +66,7 @@ function ubuntu_packages()
   ${SUDO} apt dist-upgrade -y
   ${SUDO} apt autoremove -y
   ${SUDO} apt install -y ${UBUNTU_PACKAGES[*]}
+  ${SUDO} rm -fr /var/lib/apt/lists/* /tmp/* /var/tmp/*
 }
 
 function install_gitlab_runner()
