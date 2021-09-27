@@ -121,27 +121,6 @@ function install_eksctl()
   mv /tmp/eksctl ${BIN_DIR}
 }
 
-
-function configure_helper() 
-{
-  HELPER_LINE='source ${HOME}/.bash_helper.sh'
-  cat > ${HOME}/.bash_helper.sh <<EOL
-PATH=\${HOME}/bin:\${PATH}
-source <(kustomize completion bash)
-source <(helm completion bash)
-source <(skaffold completion bash)
-source <(kubectl completion bash)
-source <(kind completion bash)
-source <(tkn completion bash)
-source <(eksctl completion bash)
-source <(flux completion bash)
-umask 022
-export EDITOR=vim
-EOL
-  chmod +x ${HOME}/.bash_helper.sh
-  grep -qxF "${HELPER_LINE}" ${HOME}/.bashrc || echo ${HELPER_LINE} >> ${HOME}/.bashrc
-}
-
 function install_terraform()
 {
   TER_VER=$(curl -s https://api.github.com/repos/hashicorp/terraform/releases/latest | grep tag_name | cut -d: -f2 | tr -d \"\,\v | awk '{$1=$1};1')
@@ -170,6 +149,40 @@ function install_flux()
   bash install.sh ${BIN_DIR}
 }
 
+function install_argocd()
+{
+  VERSION=$(curl --silent "https://api.github.com/repos/argoproj/argo-cd/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
+  curl --silent --location -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/download/$VERSION/argocd-linux-amd64
+  chmod +x /usr/local/bin/argocd
+}
+
+function install_k9s()
+{
+  snap install k9s
+}
+
+function configure_helper() 
+{
+  HELPER_LINE='source ${HOME}/.bash_helper.sh'
+  cat > ${HOME}/.bash_helper.sh <<EOL
+PATH=\${HOME}/bin:\${PATH}
+source <(kustomize completion bash)
+source <(helm completion bash)
+source <(skaffold completion bash)
+source <(kubectl completion bash)
+source <(kind completion bash)
+source <(tkn completion bash)
+source <(eksctl completion bash)
+source <(flux completion bash)
+source <(argocd completion bash)
+umask 022
+export EDITOR=vim
+EOL
+  chmod +x ${HOME}/.bash_helper.sh
+  grep -qxF "${HELPER_LINE}" ${HOME}/.bashrc || echo ${HELPER_LINE} >> ${HOME}/.bashrc
+}
+
+
 echo -e "- Installing tools, packages, and updates. Time for a ${BEER} or a ${TEACUP}"
 declare -A STEPS=(
   [install_kustomize]="Kustomize"
@@ -180,13 +193,14 @@ declare -A STEPS=(
   [install_kind]="Kind"
   [install_tekton_cli]="Tekton CLI"
   [install_eksctl]="Eksctl"
-  [configure_helper]="Shell Helper"
   [install_terraform]="Terraform"
   [install_gcloud]="Google Cloud CLI"
-  [install_flux]="Flux CLI"
   [install_aws]="AWS CLI V2"
+  [install_flux]="Flux CLI"
+  [install_argocd]="ArgoCD CLI"
+  [install_k9s]="k9s CLI"
+  [configure_helper]="Shell Helper"
 )
-
 
 printf '  - %-30s' "Ubuntu Packages" && ubuntu_packages >${LOG_FILE} 2>&1 && ${OK} || ${NOK}
 
