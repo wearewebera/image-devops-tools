@@ -2,7 +2,7 @@
 [ "${BASH_VERSINFO:-0}" -ge 4 ] || { echo "Upgrade your bash to at least version 4"; exit 1; }
 
 # Script create to be self-contained and install several basic utilities. Works on Ubuntu and its docker images
-set -ex
+set -e
 umask 022
 export PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/sbin:/usr/local/sbin:
 
