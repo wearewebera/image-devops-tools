@@ -2,7 +2,7 @@
 [ "${BASH_VERSINFO:-0}" -ge 4 ] || { echo "Upgrade your bash to at least version 4"; exit 1; }
 
 # Script create to be self-contained and install several basic utilities. Works on Ubuntu and its docker images
-set -e
+set -ex
 umask 022
 export PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/sbin:/usr/local/sbin:
 
@@ -156,11 +156,6 @@ function install_argocd()
   chmod +x /usr/local/bin/argocd
 }
 
-function install_k9s()
-{
-  snap install k9s
-}
-
 function configure_helper() 
 {
   HELPER_LINE='source ${HOME}/.bash_helper.sh'
@@ -198,7 +193,6 @@ declare -A STEPS=(
   [install_aws]="AWS CLI V2"
   [install_flux]="Flux CLI"
   [install_argocd]="ArgoCD CLI"
-  [install_k9s]="k9s CLI"
   [configure_helper]="Shell Helper"
 )
 
