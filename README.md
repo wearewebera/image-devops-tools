@@ -18,3 +18,5 @@ loads all the autocomplete for the installed tools.
 * AWS CLI v2
 * Flux CLI
 * ArgoCD CLI
+* FZF
+* neovim

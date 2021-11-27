@@ -24,6 +24,7 @@ UBUNTU_PACKAGES=(
   unzip
   jq
   fzf
+  neovim
 )
 
 mkdir -p ${BIN_DIR} ${TMP_DIR}
@@ -37,11 +38,17 @@ function ubuntu_packages()
     SUDO='sudo'
     [ "$(sudo id -u)" = "0" ] || { echo "You need sudo privileges to continue"; exit 1; } 
   fi
+  ${SUDO} add-apt-repository ppa:neovim-ppa/stable -y
   ${SUDO} apt update
   ${SUDO} apt dist-upgrade -y
   ${SUDO} apt autoremove -y
   ${SUDO} apt install -y ${UBUNTU_PACKAGES[*]}
-  ${SUDO} rm -fr /var/lib/apt/lists/* /tmp/* /var/tmp/*
+  ${SUDO} update-alternatives --install /usr/bin/vi vi /usr/bin/nvim 60
+  ${SUDO} update-alternatives --set vi /usr/bin/nvim
+  ${SUDO} update-alternatives --install /usr/bin/vim vim /usr/bin/nvim 60
+  ${SUDO} update-alternatives --set vim /usr/bin/nvim
+  ${SUDO} update-alternatives --install /usr/bin/editor editor /usr/bin/nvim 60
+  ${SUDO} update-alternatives --set editor /usr/bin/nvim
 }
 
 function install_gitlab_runner()
@@ -162,7 +169,6 @@ EOL
   chmod +x ${HOME}/.bash_helper.sh
   grep -qxF "${HELPER_LINE}" ${HOME}/.bashrc || echo ${HELPER_LINE} >> ${HOME}/.bashrc
 }
-
 
 declare STEPS=(
   ubuntu_packages
