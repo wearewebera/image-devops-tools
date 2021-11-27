@@ -23,6 +23,7 @@ UBUNTU_PACKAGES=(
   software-properties-common
   unzip
   jq
+  fzf
 )
 
 mkdir -p ${BIN_DIR} ${TMP_DIR}
