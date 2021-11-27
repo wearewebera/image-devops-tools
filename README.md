@@ -8,7 +8,7 @@ This script is kinda of idempotent, you can run it multiple times and it will
 only update the binaries and packages, except for gcloud and AWS CLI, because
 they have their own update processes.
 
-## Installed Tools
+## Tools
 * GitLab Runnner
 * Helm
 * Kustomize 
