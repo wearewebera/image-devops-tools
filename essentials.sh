@@ -115,7 +115,7 @@ function install_gcloud()
   export CLOUDSDK_CORE_DISABLE_PROMPTS=1
   export CLOUDSDK_INSTALL_DIR=${HOME}/opt
   curl https://sdk.cloud.google.com | bash 
-  ${HOME}/opt/google-cloud-sdk/install.sh --quiet --bash-completion true
+  ${HOME}/opt/google-cloud-sdk/install.sh --quiet --bash-completion true  --path-update true
 }
 
 function install_aws()
