@@ -20,6 +20,7 @@ UBUNTU_PACKAGES=(
   python3
   python3-dev
   python3-pip
+  python3-venv
   software-properties-common
   unzip
   jq
@@ -164,10 +165,17 @@ source <(flux completion bash)
 source <(argocd completion bash)
 complete -C \${HOME}/bin/aws_completer aws
 umask 022
-export EDITOR=vim
+export EDITOR=nvim
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+[ -f ~/.venv/bin/activate ] && source ~/.venv/bin/activate
 EOL
   chmod +x ${HOME}/.bash_helper.sh
   grep -qxF "${HELPER_LINE}" ${HOME}/.bashrc || echo ${HELPER_LINE} >> ${HOME}/.bashrc
+}
+
+function python_venv()
+{
+  python3 -m venv ${HOME}/.venv
 }
 
 declare STEPS=(
@@ -186,6 +194,7 @@ declare STEPS=(
   install_flux
   install_argocd
   configure_helper
+  python_venv
 )
 
 
