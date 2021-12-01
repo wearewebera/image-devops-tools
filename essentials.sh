@@ -25,7 +25,6 @@ UBUNTU_PACKAGES=(
   unzip
   jq
   fzf
-  neovim
 )
 
 mkdir -p ${BIN_DIR} ${TMP_DIR}
@@ -39,17 +38,10 @@ function ubuntu_packages()
     SUDO='sudo'
     [ "$(sudo id -u)" = "0" ] || { echo "You need sudo privileges to continue"; exit 1; } 
   fi
-  ${SUDO} add-apt-repository ppa:neovim-ppa/stable -y
   ${SUDO} apt update
   ${SUDO} apt dist-upgrade -y
   ${SUDO} apt autoremove -y
   ${SUDO} apt install -y ${UBUNTU_PACKAGES[*]}
-  ${SUDO} update-alternatives --install /usr/bin/vi vi /usr/bin/nvim 60
-  ${SUDO} update-alternatives --set vi /usr/bin/nvim
-  ${SUDO} update-alternatives --install /usr/bin/vim vim /usr/bin/nvim 60
-  ${SUDO} update-alternatives --set vim /usr/bin/nvim
-  ${SUDO} update-alternatives --install /usr/bin/editor editor /usr/bin/nvim 60
-  ${SUDO} update-alternatives --set editor /usr/bin/nvim
 }
 
 function install_gitlab_runner()
@@ -153,7 +145,7 @@ function configure_helper()
 {
   HELPER_LINE='source ${HOME}/.bash_helper.sh'
   cat > ${HOME}/.bash_helper.sh <<EOL
-PATH=\${HOME}/bin:\${PATH}
+PATH=\${HOME}/bin:\${HOME}/opt/nvim-linux64/bin:\${PATH}
 source <(kustomize completion bash)
 source <(helm completion bash)
 source <(skaffold completion bash)
@@ -164,6 +156,8 @@ source <(eksctl completion bash)
 source <(flux completion bash)
 source <(argocd completion bash)
 complete -C \${HOME}/bin/aws_completer aws
+alias vim=nvim
+alias vi=nvim
 umask 022
 export EDITOR=nvim
 export VIRTUAL_ENV_DISABLE_PROMPT=1
@@ -176,6 +170,13 @@ EOL
 function python_venv()
 {
   python3 -m venv ${HOME}/.venv
+}
+
+function install_nvim()
+{
+  mkdir -p ${HOME}/opt
+  wget https://github.com/neovim/neovim/releases/download/nightly/nvim-linux64.tar.gz
+  tar zxvf nvim-linux64.tar.gz -C ${HOME}/opt
 }
 
 declare STEPS=(
@@ -193,6 +194,7 @@ declare STEPS=(
   install_aws
   install_flux
   install_argocd
+  install_nvim
   configure_helper
   python_venv
 )
