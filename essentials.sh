@@ -5,10 +5,11 @@ set -eux
 umask 022
 
 # Configuration definitions
+export DEFAULT_PYTHON_VERSION="${PYTHON_VERSION:-3}"
 export BIN_DIR=${HOME}/bin
 export TMP_DIR=${HOME}/tmp/workstation-tmp
 export PATH=${BIN_DIR}:/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/sbin:/usr/local/sbin:
-UBUNTU_PACKAGES=(
+export UBUNTU_PACKAGES=(
   apt-utils
   docker.io
   vim
@@ -17,10 +18,9 @@ UBUNTU_PACKAGES=(
   golang
   curl
   wget
-  python3
-  python3-dev
-  python3-pip
-  python3-venv
+  python${DEFAULT_PYTHON_VERSION}
+  python${DEFAULT_PYTHON_VERSION}-dev
+  python${DEFAULT_PYTHON_VERSION}-venv
   software-properties-common
   unzip
   jq
