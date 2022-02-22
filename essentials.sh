@@ -169,7 +169,7 @@ EOL
 
 function python_venv()
 {
-  python3 -m venv ${HOME}/.venv
+  python${DEFAULT_PYTHON_VERSION} -m venv ${HOME}/.venv
 }
 
 function install_nvim()
