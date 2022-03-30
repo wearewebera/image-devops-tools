@@ -5,27 +5,9 @@ set -eux
 umask 022
 
 # Configuration definitions
-export DEFAULT_PYTHON_VERSION="${PYTHON_VERSION:-3}"
 export BIN_DIR=${HOME}/bin
 export TMP_DIR=${HOME}/tmp/workstation-tmp
 export PATH=${BIN_DIR}:/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/sbin:/usr/local/sbin:
-export UBUNTU_PACKAGES=(
-  apt-utils
-  docker.io
-  vim
-  build-essential
-  git
-  golang
-  curl
-  wget
-  python${DEFAULT_PYTHON_VERSION}
-  python${DEFAULT_PYTHON_VERSION}-dev
-  python${DEFAULT_PYTHON_VERSION}-venv
-  software-properties-common
-  unzip
-  jq
-  fzf
-)
 
 mkdir -p ${BIN_DIR} ${TMP_DIR}
 cd ${TMP_DIR}
@@ -33,14 +15,41 @@ cd ${TMP_DIR}
 # All functions, I know they should be in a separated file, but they are here to keep all in one file 
 function ubuntu_packages()
 {
+  export DEFAULT_PYTHON_VERSION="${PYTHON_VERSION:-3}"
+  export UBUNTU_PACKAGES=(
+    apt-utils
+    docker.io
+    vim
+    build-essential
+    git
+    golang
+    curl
+    wget
+    python${DEFAULT_PYTHON_VERSION}
+    python${DEFAULT_PYTHON_VERSION}-dev
+    python${DEFAULT_PYTHON_VERSION}-venv
+    software-properties-common
+    unzip
+    jq
+    fzf
+    terraform
+    vault
+  )
   SUDO=''
   if (( $EUID != 0 )); then
     SUDO='sudo'
     [ "$(sudo id -u)" = "0" ] || { echo "You need sudo privileges to continue"; exit 1; } 
   fi
+  # Adding HashiCorp GPG keys and Repository
+  curl -fsSL https://apt.releases.hashicorp.com/gpg | ${SUDO} apt-key add -
+  ${SUDO} apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+
+  # Update local database and all packages
   ${SUDO} apt update
   ${SUDO} apt dist-upgrade -y
   ${SUDO} apt autoremove -y
+
+  # Install all packages
   ${SUDO} apt install -y ${UBUNTU_PACKAGES[*]}
 }
 
@@ -58,24 +67,10 @@ function install_helm()
   bash -x get_helm.sh
 }
 
-function install_kustomize()
-{
-    curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
-    mv kustomize ${BIN_DIR}
-}
-
 function install_skaffold()
 {
   curl -sL --output ${BIN_DIR}/skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
   chmod +x ${BIN_DIR}/skaffold
-}
-
-function install_kubectl() 
-{
-  VERSION=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)
-  URL="https://storage.googleapis.com/kubernetes-release/release/${VERSION}/bin/linux/amd64/kubectl"
-  curl -sL --output ${BIN_DIR}/kubectl ${URL}
-  chmod +x ${BIN_DIR}/kubectl
 }
 
 function install_kind()
@@ -101,15 +96,8 @@ function install_eksctl()
   mv /tmp/eksctl ${BIN_DIR}
 }
 
-function install_terraform()
-{
-  TER_VER=$(curl -s https://api.github.com/repos/hashicorp/terraform/releases/latest | grep tag_name | cut -d: -f2 | tr -d \"\,\v | awk '{$1=$1};1')
-  curl -sLO https://releases.hashicorp.com/terraform/${TER_VER}/terraform_${TER_VER}_linux_amd64.zip
-  unzip terraform_${TER_VER}_linux_amd64.zip 
-  mv terraform ${BIN_DIR}
-}
-
-function install_gcloud()
+# Install Google Cloud CLI plus kubectl, kpt, kustomize
+function install_gcloud_plus()
 {
   [ -d ${HOME}/opt/google-cloud-sdk ] && return
   mkdir -p ${HOME}/opt
@@ -117,6 +105,10 @@ function install_gcloud()
   export CLOUDSDK_INSTALL_DIR=${HOME}/opt
   curl https://sdk.cloud.google.com | bash 
   ${HOME}/opt/google-cloud-sdk/install.sh --quiet --bash-completion true  --path-update true
+  [ -f "${HOME}/opt/google-cloud-sdk/path.bash.inc" ] && source "${HOME}/opt/google-cloud-sdk/path.bash.inc"
+  gcloud components update
+  gcloud components install kubectl kpt kustomize
+
 }
 
 function install_aws()
@@ -156,6 +148,8 @@ source <(eksctl completion bash)
 source <(flux completion bash)
 source <(argocd completion bash)
 complete -C \${HOME}/bin/aws_completer aws
+complete -C /usr/bin/terraform terraform
+complete -C /usr/bin/vault vault
 alias vim=nvim
 alias vi=nvim
 umask 022
@@ -181,15 +175,11 @@ function install_nvim()
 
 declare STEPS=(
   ubuntu_packages
-  install_kustomize
   install_gitlab_runner
   install_helm
-  install_skaffold
-  install_kubectl
   install_kind
   install_tekton_cli
   install_eksctl
-  install_terraform
   install_gcloud
   install_aws
   install_flux
