@@ -10,19 +10,19 @@ only update the binaries and packages, except for gcloud and AWS CLI, because
 they have their own update processes.
 
 ## What about this container?
-  - GitLab Runnner
+  - Kubectl
+  - Flux CLI
   - Helm
   - Kustomize 
-  - Kubectl
+  - gcloud
+  - AWS CLI v2
+  - Terraform
   - Skaffold
   - Kind
   - Tekton CLI
   - eksctl
-  - Terraform
-  - gcloud
-  - AWS CLI v2
-  - Flux CLI
   - ArgoCD CLI
+  - GitLab Runnner
   - FZF
   - neovim
 
@@ -30,3 +30,5 @@ they have their own update processes.
 
 The scripts creates a personal `.venv` environment on the home folder and adds
 to the `.bashrc` script using the helper script.
+
+[See on Docker HUB.](https://hub.docker.com/r/webera/devops-tools)
