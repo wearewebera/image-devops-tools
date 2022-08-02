@@ -38,10 +38,10 @@ function ubuntu_packages()
     SUDO='sudo'
     [ "$(sudo id -u)" = "0" ] || { echo "You need sudo privileges to continue"; exit 1; } 
   fi
-  ${SUDO} apt update
-  ${SUDO} apt dist-upgrade -y
-  ${SUDO} apt autoremove -y
-  ${SUDO} apt install -y ${UBUNTU_PACKAGES[*]}
+  ${SUDO} apt-get update
+  ${SUDO} apt-get dist-upgrade -y
+  ${SUDO} apt-get autoremove -y
+  ${SUDO} apt-get install -y --no-install-recommends ${UBUNTU_PACKAGES[*]}
 }
 
 function install_gitlab_runner()
@@ -117,6 +117,8 @@ function install_gcloud()
   export CLOUDSDK_INSTALL_DIR=${HOME}/opt
   curl https://sdk.cloud.google.com | bash 
   ${HOME}/opt/google-cloud-sdk/install.sh --quiet --bash-completion true  --path-update true
+  source ${HOME}/opt/google-cloud-sdk/path.bash.inc
+  gcloud components install -q gke-gcloud-auth-plugin
 }
 
 function install_aws()
@@ -161,6 +163,7 @@ alias vi=nvim
 umask 022
 export EDITOR=nvim
 export VIRTUAL_ENV_DISABLE_PROMPT=1
+export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 [ -f ~/.venv/bin/activate ] && source ~/.venv/bin/activate
 EOL
   chmod +x ${HOME}/.bash_helper.sh

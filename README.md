@@ -1,29 +1,30 @@
-# Dev and Ops Tools
+# Webera Dev and Ops Tools Image
 
-Collection of scripts and tools to improve dev and ops workflows. Besides the
-installation it also configures the `.bashrc` file with a helper script which
-loads all the autocomplete for the installed tools.
+Repository used to maintain container image with collection of scripts and
+tools useful to Devs and Ops. Besides the installation it also configures
+the `.bashrc` file with a helper script which loads all the autocomplete for
+the installed tools.
 
 This script is kinda of idempotent, you can run it multiple times and it will
 only update the binaries and packages, except for gcloud and AWS CLI, because
 they have their own update processes.
 
-## Tools
-* GitLab Runnner
-* Helm
-* Kustomize 
-* Kubectl
-* Skaffold
-* Kind
-* Tekton CLI
-* eksctl
-* Terraform
-* gcloud
-* AWS CLI v2
-* Flux CLI
-* ArgoCD CLI
-* FZF
-* neovim
+## What about this container?
+  - GitLab Runnner
+  - Helm
+  - Kustomize 
+  - Kubectl
+  - Skaffold
+  - Kind
+  - Tekton CLI
+  - eksctl
+  - Terraform
+  - gcloud
+  - AWS CLI v2
+  - Flux CLI
+  - ArgoCD CLI
+  - FZF
+  - neovim
 
 ## Python Virtual Environment
 
