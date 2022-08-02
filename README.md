@@ -3,11 +3,9 @@
 Repository used to maintain container image with collection of scripts and
 tools useful to Devs and Ops. Besides the installation it also configures
 the `.bashrc` file with a helper script which loads all the autocomplete for
-the installed tools.
+the installed tools. To use this image:
 
-This script is kinda of idempotent, you can run it multiple times and it will
-only update the binaries and packages, except for gcloud and AWS CLI, because
-they have their own update processes.
+    docker run --rm -it webera/devops-tools
 
 ## What about this container?
   - Kubectl
