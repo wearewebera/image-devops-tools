@@ -182,6 +182,15 @@ function install_nvim()
   tar zxvf nvim-linux64.tar.gz -C ${HOME}/opt
 }
 
+function install_ghcli()
+{
+  curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+  && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" > /etc/apt/sources.list.d/github-cli.list \
+  && apt-get update \
+  && apt-get install gh -y
+}
+
 declare STEPS=(
   ubuntu_packages
   install_kustomize
@@ -198,6 +207,7 @@ declare STEPS=(
   install_flux
   install_argocd
   install_nvim
+  install_ghcli
   configure_helper
   python_venv
 )
