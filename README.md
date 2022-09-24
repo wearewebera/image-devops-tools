@@ -21,6 +21,7 @@ the installed tools. To use this image:
   - eksctl
   - ArgoCD CLI
   - GitLab Runnner
+  - Github CLI
   - FZF
   - neovim
 
